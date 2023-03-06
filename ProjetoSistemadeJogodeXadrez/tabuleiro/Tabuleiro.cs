@@ -1,4 +1,4 @@
-﻿using ProjetoSistemadeJogodeXadrez.tabuleiro;
+﻿using tabuleiro;
 
 namespace tabuleiro
 {
@@ -13,6 +13,11 @@ namespace tabuleiro
             Linhas = linhas;
             Colunas = colunas;
             Pecas = new Peca[linhas, colunas];//Quantas Linha e Colunas esse Tabuleiro vai ter
+        }
+
+        public Peca peca(int linha, int coluna)
+        {
+            return Pecas[linha, coluna];
         }
     }
 }

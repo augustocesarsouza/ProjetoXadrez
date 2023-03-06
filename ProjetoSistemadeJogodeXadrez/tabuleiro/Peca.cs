@@ -1,7 +1,7 @@
 ﻿using tabuleiro;
 using tabuleiro.Enums;
 
-namespace ProjetoSistemadeJogodeXadrez.tabuleiro
+namespace tabuleiro
 {
     internal class Peca
     {
