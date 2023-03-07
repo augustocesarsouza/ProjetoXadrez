@@ -1,4 +1,5 @@
 ﻿using tabuleiro;
+using tabuleiro.Exceptions;
 
 namespace tabuleiro
 {
@@ -6,7 +7,7 @@ namespace tabuleiro
     {
         public int Linhas { get; set; }
         public int Colunas { get; set; }
-        private Peca[,] Pecas; //Só tabuleiro meche nela
+        private Peca[,] Pecas; //Só tabuleiro meche nela - aqui é relação tem varias no caso varias peças entao por isso matriz aqui varias peças tabuleiro
 
         public Tabuleiro(int linhas, int colunas)
         {
@@ -15,15 +16,47 @@ namespace tabuleiro
             Pecas = new Peca[linhas, colunas];//Quantas Linha e Colunas esse Tabuleiro vai ter
         }
 
-        public Peca peca(int linha, int coluna)
+        public Peca Peca(int linha, int coluna)
         {
             return Pecas[linha, coluna];
         }
 
+        public Peca Peca(Posicao pos)
+        {
+            return Pecas[pos.Linha, pos.Coluna];
+        }
+
+        public bool ExistePeca(Posicao pos)
+        {
+            ValidarPosicao(pos);
+            return Peca(pos) != null;
+        }
+
         public void ColocarPeca(Peca p, Posicao pos)
         {
+            if (ExistePeca(pos))
+            {
+                throw new TabuleiroException("there is already a piece in that position!");
+            }
             Pecas[pos.Linha, pos.Coluna] = p;
             p.Posicao = pos;
+        }
+
+        public bool PosicaoValida(Posicao pos)
+        {
+            if (pos.Linha < 0 || pos.Linha >= Linhas || pos.Coluna < 0 || pos.Coluna >= Colunas)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        public void ValidarPosicao(Posicao pos)
+        {
+            if (!PosicaoValida(pos))
+            {
+                throw new TabuleiroException("invalid position!");
+            }
         }
     }
 }

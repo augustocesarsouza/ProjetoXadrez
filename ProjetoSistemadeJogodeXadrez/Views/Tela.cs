@@ -9,13 +9,13 @@ namespace Views
             {
                 for (int j = 0; j < tab.Colunas; j++)
                 {
-                    if (tab.peca(i, j) == null) //Por padrao null todos 
+                    if (tab.Peca(i, j) == null) //Por padrao null todos 
                     {
                         Console.Write("- ");
                     }
                     else
                     {
-                        Console.Write($"{tab.peca(i, j)} ");
+                        Console.Write($"{tab.Peca(i, j)} ");
                     }
                 }
                 Console.WriteLine();
