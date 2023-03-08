@@ -15,6 +15,10 @@ namespace Views
             Console.WriteLine();
             Console.WriteLine($"Shift: {partida.Turno}");
             Console.WriteLine($"Waiting for move: {partida.JogadorAtual}");
+            if (partida.Xeque)
+            {
+                Console.WriteLine("XEQUE!");
+            }
         }
 
         public static void ImprimirPecasCapturadas(PartidaDeXadrez partida)

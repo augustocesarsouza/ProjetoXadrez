@@ -18,6 +18,16 @@ namespace tabuleiro
             QteMovimentos = 0; //Quando ela acaba de ser criada ela tem 0 Movimento
         }
 
+        public void IncrementarQteMovimento()
+        {
+            QteMovimentos++;
+        }
+
+        public void DecrementarQteMovimento()
+        {
+            QteMovimentos--;
+        }
+
         public bool ExisteMovimentosPossiveis()
         {
             bool[,] mat = MovimentosPossiveis();
@@ -41,10 +51,5 @@ namespace tabuleiro
 
         public abstract bool[,] MovimentosPossiveis(); //Matriz para saber para onde a peça pode ir ou não / Depende da peça / True para onde pode ir
         //Por a Classe Peca ser Muito Generica não tem como ele coloca uma logica para ver onde a peca vai agora as peças por si só vão fazer essa logica
-
-        public void IncrementarQteMovimento()
-        {
-            QteMovimentos++;
-        }
     }
 }

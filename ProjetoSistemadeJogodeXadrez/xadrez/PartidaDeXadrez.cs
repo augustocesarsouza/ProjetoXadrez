@@ -13,6 +13,7 @@ namespace xadrez
         public bool Terminada { get; private set; }
         private HashSet<Peca> Pecas = new HashSet<Peca>();
         private HashSet<Peca> Capturadas = new HashSet<Peca>(); //Parecido com List()
+        public bool Xeque { get; private set; } //Verifica se a partirda esta em Xeque
 
         public PartidaDeXadrez()
         {
@@ -20,10 +21,11 @@ namespace xadrez
             Turno = 1;
             JogadorAtual = Cor.Branca;
             Terminada = false;
+            Xeque = false;
             ColocarPecas();
         }
 
-        public void ExecutaMovimento(Posicao origem, Posicao destino)
+        public Peca ExecutaMovimento(Posicao origem, Posicao destino)
         {
             Peca p = Tab.RetirarPeca(origem);
             p.IncrementarQteMovimento();
@@ -33,11 +35,40 @@ namespace xadrez
             {
                 Capturadas.Add(pecaCapturada);
             }
+            return pecaCapturada;
+        }
+
+        public void DesfazMovimento(Posicao origem, Posicao destino, Peca pecaCapturada)
+        {
+            Peca p = Tab.RetirarPeca(destino); //Rei aqui
+            p.DecrementarQteMovimento();
+            if (pecaCapturada != null) //Torre aqui Exemplo de Peça
+            {
+                Tab.ColocarPeca(pecaCapturada, destino);
+                Capturadas.Remove(pecaCapturada);
+            }
+            Tab.ColocarPeca(p, origem);
         }
 
         public void RealizaJogada(Posicao origem, Posicao destino)
         {
-            ExecutaMovimento(origem, destino);
+            Peca pecaCapturada = ExecutaMovimento(origem, destino);//Executa
+
+            if (EstaEmXeque(JogadorAtual)) //Aqui verifica se meu movimento Do rei vai estar em check Por que eu nao posso mover meu Rei para Check
+            {//Voce nao pode se alto colocar em Xeque com REI
+                DesfazMovimento(origem, destino, pecaCapturada);
+                throw new TabuleiroException("You cannot put yourself in check!");
+            }
+
+            if (EstaEmXeque(Adversaria(JogadorAtual))) //Se for Branco meu Adversario é o Preto...
+            {//Meu Adversario pode fica em Xeque com minha Jogada
+                Xeque = true;
+            }
+            else
+            {
+                Xeque = false;
+            }
+
             Turno++;
             MudaJogador();
         }
@@ -103,6 +134,48 @@ namespace xadrez
             }
             aux.ExceptWith(PecasCapturadas(cor)); // Basicamente ele ta tirando de dentro de aux as peças que foram capturadas que nao estao mais em jogo
             return aux;
+        }
+
+        private Cor Adversaria(Cor cor)
+        {
+            if (cor == Cor.Branca)
+            {
+                return Cor.Preta;
+            }else
+            {
+                return Cor.Branca;
+            }
+        }
+
+        private Peca Rei(Cor cor)
+        {
+            foreach (Peca x in PecasEmJogo(cor))
+            {
+                if (x is Rei)
+                {
+                    return x;
+                }
+            }
+            return null;
+        }
+
+        public bool EstaEmXeque(Cor cor)
+        {
+            Peca R = Rei(cor);
+            if (R == null)
+            {
+                throw new TabuleiroException($"There is no {cor} color king on the board");
+            }
+
+            foreach (Peca x in PecasEmJogo(Adversaria(cor))) //Peça adversaria
+            {
+                bool[,] mat = x.MovimentosPossiveis();
+                if (mat[R.Posicao.Linha, R.Posicao.Coluna]) //Meu Rei está em Xeque Se der TRUE
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void ColocarNovaPeca(char coluna, int linha, Peca peca)
