@@ -14,10 +14,18 @@ namespace Views
             ImprimirPecasCapturadas(partida);
             Console.WriteLine();
             Console.WriteLine($"Shift: {partida.Turno}");
-            Console.WriteLine($"Waiting for move: {partida.JogadorAtual}");
-            if (partida.Xeque)
+            if (!partida.Terminada)
             {
-                Console.WriteLine("XEQUE!");
+                Console.WriteLine($"Waiting for move: {partida.JogadorAtual}");
+                if (partida.Xeque)
+                {
+                    Console.WriteLine("XEQUE!");
+                }
+            }
+            else
+            {
+                Console.WriteLine("XEQUEMATE!");
+                Console.WriteLine($"Vencedor {partida.JogadorAtual}");
             }
         }
 
